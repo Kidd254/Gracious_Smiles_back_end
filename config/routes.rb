@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
-  devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  devise_for :users, controllers: { registrations: 'v1/users' }
+  namespace :v1 do
+    resources :users, only: [:create] do
+      collection do
+        post 'search_by_email'
+      end
+    end
+  end
 end
