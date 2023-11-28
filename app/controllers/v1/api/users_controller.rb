@@ -9,19 +9,20 @@ class V1::Api::UsersController < ApplicationController
     end
 
     def search_by_email
-        email = params[:email]
+        users = User.all
 
-        @user = User.find_by(email)
-        if @user
-            user_details = {
-            id: @user.id,
-            username: @user.name,
-            email: @user.email
+        if users.any?
+          user_details = users.map do |user|
+            {
+              id: user.id,
+              username: user.name,
+              email: user.email
             }
-
-        render json: {user: user_details}, status: :ok
+          end
+      
+          render json: { users: user_details }, status: :ok
         else
-            render json: {error: "User not found"}, status: :not_found
+          render json: { error: "No users found" }, status: :not_found
         end
     end
 
